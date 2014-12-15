@@ -22,7 +22,7 @@
     cursor: pointer;
     color: #1b1b1b;
 }
-#kiwi button:disabled { color: #464646; background:#9cc164; }
+#kiwi button:disabled { color: #464646; background:#A1B385; }
 
 #kiwi .toolbar {
     background-color:#1B1B1B; font-size:0.9em;

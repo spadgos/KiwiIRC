@@ -38,6 +38,7 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
             server: new_connection_event.server,
             port: new_connection_event.port,
             ssl: new_connection_event.ssl,
+            password: new_connection_event.password,
             channel: new_connection_event.channel,
             channel_key: new_connection_event.channel_key,
             options: new_connection_event.options

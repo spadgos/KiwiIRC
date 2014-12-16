@@ -15,7 +15,7 @@
       maxSize = 4 * 1024 * 1024;
 
   // so that `dataTransfer` exists on the jquery event object
-  jQuery.event.props.push('dataTransfer');
+  jQuery.event.props.push('dataTransfer', 'clipboardData');
 
   link.append(icon).click(onClick);
 
@@ -26,13 +26,39 @@
 
   input.onchange = onFilesSelected;
 
+  controlInput.input[0].onpaste = _.throttle(onPaste, 250, { trailing: false });
+
   $(document).on('drop', onDrop)
              .on('dragover', _.constant(false))
              .on('dragenter', _.constant(false));
 
-  function onClick(ev) {
-    ev.preventDefault();
+  function onClick(event) {
+    event.preventDefault();
     input.click();
+  }
+
+  function onPaste(event) {
+    var dataTransfer = event.clipboardData,
+        item = dataTransfer.items[0],
+        lines,
+        data;
+
+    if (!item) {
+      return;
+    }
+    if (item.kind === 'string') {
+      data = dataTransfer.getData('text');
+      lines = countLines(data);
+      if (data.length > 400 || lines > 5) {
+        if (confirm('You have pasted a lot of text ' + data.length + ' characters (' + lines + ' lines). Would you prefer to upload and share a link?')) {
+          upload(new Blob([data], { type: 'text/plain' }));
+        }
+        return false;
+      }
+    } else if (item.kind === 'file') {
+      upload(item.getAsFile());
+      return false;
+    }
   }
 
   function onFilesSelected(event) {
@@ -85,6 +111,12 @@
 
   function getExtension(name) {
     return /(\.(?:tar\.)?[^.]+)?$/.exec(name)[0];
+  }
+
+  function countLines(text) {
+    return text.split(/\r?\n/).reduce(function (count, line) {
+      return count + (Math.ceil(line / 510) || 1); // 510 = max line length in irc
+    }, 0);
   }
 
   function addOrSendText(text) {

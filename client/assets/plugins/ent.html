@@ -1,0 +1,118 @@
+<script type="text/javascript">
+// File picker plugin
+// /srv/www/files/asset-hosting/ent/web-core/tmp-pls-delete
+/*eslint no-use-before-define: 0, quotes: 0, new-cap: 0 */
+/*global $, kiwi, _ */
+/*eslint-env browser */
+(function () {
+  'use strict';
+  var input,
+      icon = $('<i></i>', { 'class': 'fa fa-upload', 'css': { 'font-size': '120%', 'line-height': 1.4 } }),
+      link = $('<a></a>', { 'class': 'upload', title: 'Send File' }),
+      controlInput = kiwi.components.ControlInput(),
+      // entBase = 'http://ent.int.s-cloud.net/web-core/tmp-pls-delete';
+      entBase = 'http://localhost:5555/irc',
+      maxSize = 4 * 1024 * 1024;
+
+  // so that `dataTransfer` exists on the jquery event object
+  jQuery.event.props.push('dataTransfer');
+
+  link.append(icon).click(onClick);
+
+  controlInput.addPluginIcon(link);
+
+  input = document.createElement('input');
+  input.type = 'file';
+
+  input.onchange = onFilesSelected;
+
+  $(document).on('drop', onDrop)
+             .on('dragover', _.constant(false))
+             .on('dragenter', _.constant(false));
+
+  function onClick(ev) {
+    ev.preventDefault();
+    input.click();
+  }
+
+  function onFilesSelected(event) {
+    var file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+    event.target.value = '';
+    upload(file);
+  }
+
+  function upload(file) {
+    setIcon('uploading');
+    if (file.size > maxSize) {
+      onUploadDone('File too large. Max size: ' + Math.round(maxSize / 1024) + 'KB');
+      return;
+    }
+    var url = entBase + '/' + randomFileName(file.name),
+        xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.onload = function(event) {
+      if (event.target.status === 201) {
+        onUploadDone(null, url);
+      } else {
+        onUploadDone(event);
+      }
+    };
+    xhr.onerror = onUploadDone;
+
+    xhr.send(file);
+  }
+
+  function onUploadDone(err, url) {
+    if (err) {
+      setIcon('fail');
+      window.console.error('Error uploading file.');
+      window.console.log(err);
+    } else {
+      setIcon('success');
+      addOrSendText(url);
+    }
+    setTimeout(function () {
+      setIcon('upload');
+    }, 3000);
+  }
+
+  function randomFileName(name) {
+    return (Date.now() * 100 + Math.round(Math.random() * 100)).toString(36).substr(3) + getExtension(name);
+  }
+
+  function getExtension(name) {
+    return /(\.(?:tar\.)?[^.]+)?$/.exec(name)[0];
+  }
+
+  function addOrSendText(text) {
+    var area = $("#kiwi .controlbox textarea"),
+        currVal = area.val().trim();
+    if (currVal) {
+      area.val(currVal + ' ' + text).focus();
+    } else {
+      controlInput.run(text);
+    }
+  }
+
+  function setIcon(type) {
+    var types = {
+      upload: 'fa-upload',
+      success: 'fa-thumbs-o-up',
+      fail: 'fa-thumbs-o-down',
+      uploading: 'fa-refresh fa-spin'
+    };
+
+    icon.removeClass(_.values(_.omit(types, type)).join(' '))
+        .addClass(types[type]);
+  }
+
+  function onDrop(event) {
+    var file = event.dataTransfer.files[0];
+    upload(file);
+    return false;
+  }
+}());
+</script>

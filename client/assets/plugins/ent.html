@@ -50,7 +50,7 @@
       data = dataTransfer.getData('text');
       lines = countLines(data);
       if (data.length > 400 || lines > 5) {
-        if (confirm('You have pasted a lot of text ' + data.length + ' characters (' + lines + ' lines). Would you prefer to upload and share a link?')) {
+        if (confirm('You have pasted a lot of text (' + data.length + ' characters, ' + lines + ' lines). Would you prefer to upload and share a link?')) {
           upload(new Blob([data], { type: 'text/plain' }));
         }
         return false;

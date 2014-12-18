@@ -1,1 +1,1 @@
-web: PATH=./system/usr/bin/node:$PATH ./kiwi -f start
+web: ./kiwi -f start

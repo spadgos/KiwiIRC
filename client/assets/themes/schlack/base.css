@@ -91,6 +91,7 @@
     font-size:0.8em;
 }
 #kiwi .toolbar .panellist.applets li .activity { display: none; }
+
 #kiwi .toolbar .panellist li .activity:before { content:"["; }
 #kiwi .toolbar .panellist li .activity:after { content:"]"; }
 
@@ -401,8 +402,12 @@
 #kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
 #kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block; margin-right: 5px; }
 #kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
-#kiwi.chanlist_treeview .tabs ul li .activity { }
-#kiwi .tabs ul li .activity.zero { display: none; }
+
+#kiwi .toolbar .panellist li .activity:empty,
+#kiwi .tabs ul li .activity.zero {
+    display: none;
+}
+
 #kiwi.chanlist_treeview .toolbar .panellist li {
     padding: 4px 8px;
 }

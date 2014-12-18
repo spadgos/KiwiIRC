@@ -1,0 +1,11 @@
+#kiwi .messages .msg > div { font-family: Consolas, "Lucida Console", monospace; font-size:0.9em; }
+#kiwi .messages .msg .nick:before { content:"<";  }
+#kiwi .messages .msg .nick:after { content:">"; }
+#kiwi.timestamps .messages .msg .time { float: none; }
+#kiwi.timestamps .messages .msg .text { display: inline; margin-left: 0; }
+#kiwi .messages .msg.repeated_nick { padding: 4px 5px 0; }
+
+#kiwi .messages .msg.repeated_nick .nick,
+#kiwi.timestamps .messages .msg.repeated_nick .time {
+    display: inline;
+}

@@ -1,0 +1,8 @@
+.git
+.gitignore
+.gitmodules
+.pkgignore
+.*.swp
+.tmp
+.npm
+.node-gyp

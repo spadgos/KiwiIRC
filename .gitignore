@@ -9,4 +9,7 @@ client/assets/locales/*.json
 client/index.html
 kiwi.log
 kiwiirc.pid
-config.js
+.env
+.node-gyp
+.npm
+system

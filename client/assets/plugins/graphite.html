@@ -1,0 +1,57 @@
+<script type="text/javascript">
+// File picker plugin
+// /srv/www/files/asset-hosting/ent/web-core/tmp-pls-delete
+/*eslint no-use-before-define: 0, quotes: 0, new-cap: 0 */
+/*global $, kiwi */
+/*eslint-env browser */
+(function () {
+  'use strict';
+
+  var override = {
+    height: 400,
+    width: 700
+  };
+
+  kiwi.addMediaMessageType(match, buildHTML);
+  // http://graphite.int.s-cloud.net/render?width=370&from=-24hours&until=-&height=250&target=stats.timers.sssr.endpoint.track.mean_90&target=stats.timers.sssr.endpoint.sketchy.mean_90&target=stats.timers.sssr.endpoint.resolve.mean_90&target=stats.timers.sssr.endpoint.user.mean_90&title=track_listen_page&areaMode=stacked&hideLegend=true&yMax=300&_uniq=0.1721451017074287
+  function match(url) {
+    return /^http:\/\/graphite.int.s-cloud.net\/render\?/.test(url);
+  }
+  function buildHTML(url) {
+    var title, $output, $image, autoRefresh = false, firstTime = true;
+
+    url = url.replace(/([?&]width)=\d+/, '$1=' + override.width)
+             .replace(/([?&]height)=\d+/, '$1=' + override.height)
+             .replace(/([?&])title=([^&]+)/, function (__, punc, str) {
+               title = str;
+               return punc === '?' ? punc : '';
+             })
+             .replace(/[?&]until=([^&]+)/, function (param, until) {
+               if (until[0] === '-' || until === 'now') {
+                 autoRefresh = true;
+               }
+               return param;
+             });
+
+    $output = $('<div/>');
+    if (title) {
+      $output.append($('<div/>', { text: title }));
+    }
+    $image = $('<img/>', override);
+
+    $output.append($image);
+
+    function refreshImage() {
+      if (firstTime || (autoRefresh && $image.closest('body').length)) {
+        $image.attr('src', url.replace(/&_uniq=[^&]+|$/, '&_uniq=' + Math.random()));
+        firstTime = false;
+        setTimeout(refreshImage, 60000);
+      }
+    }
+
+    refreshImage();
+
+    return $output;
+  }
+}());
+</script>

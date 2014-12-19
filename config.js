@@ -76,7 +76,8 @@ conf.default_encoding = 'utf8';
  * See http://github.com/prawnsalad/KiwiIRC/wiki/Client-plugins
  */
 conf.client_plugins = [
-    'kiwi/assets/plugins/ent.html'
+    'kiwi/assets/plugins/ent.html',
+    'kiwi/assets/plugins/graphite.html'
 ];
 
 // Directory to find the server modules
@@ -156,7 +157,7 @@ conf.client = {
     server_password: process.env.IRC_SERVER_PASS,
     nick:    'sc_?',
     settings: {
-        theme: 'basic',
+        theme: 'schlack',
         channel_list_style: 'list',
         scrollback: 500,
         show_joins_parts: false,
@@ -172,11 +173,11 @@ conf.client = {
 // List of themes available for the user to choose from
 conf.client_themes = [
     'relaxed',
-    'basic'
-    // 'schlack',
-    // 'schlack-monospace',
-    // 'schlack-dark',
-    // 'schlack-monospace-dark'
+    'basic',
+    'schlack',
+    'schlack-monospace',
+    'schlack-dark',
+    'schlack-monospace-dark'
 ];
 
 // If set, the client may only connect to this 1 IRC server

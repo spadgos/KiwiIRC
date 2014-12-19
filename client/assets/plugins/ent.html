@@ -1,7 +1,7 @@
 <script type="text/javascript">
 // File picker plugin
 // /srv/www/files/asset-hosting/ent/web-core/tmp-pls-delete
-/*eslint no-use-before-define: 0, quotes: 0, new-cap: 0 */
+/*eslint no-use-before-define: 0, quotes: 0, new-cap: 0, no-alert: 0 */
 /*global $, kiwi, _ */
 /*eslint-env browser */
 (function () {
@@ -15,7 +15,7 @@
       maxSize = 4 * 1024 * 1024;
 
   // so that `dataTransfer` exists on the jquery event object
-  jQuery.event.props.push('dataTransfer', 'clipboardData');
+  $.event.props.push('dataTransfer', 'clipboardData');
 
   link.append(icon).click(onClick);
 
@@ -44,13 +44,13 @@
         data;
 
     if (!item) {
-      return;
+      return true;
     }
     if (item.kind === 'string') {
       data = dataTransfer.getData('text');
       lines = countLines(data);
-      if (data.length > 400 || lines > 5) {
-        if (confirm('You have pasted a lot of text (' + data.length + ' characters, ' + lines + ' lines). Would you prefer to upload and share a link?')) {
+      if (lines >= 3) {
+        if (window.confirm('You have pasted a lot of text (' + data.length + ' characters, ' + lines + ' lines). Would you prefer to upload and share a link?')) {
           upload(new Blob([data], { type: 'text/plain' }));
         }
         return false;
@@ -59,6 +59,7 @@
       upload(item.getAsFile());
       return false;
     }
+    return true;
   }
 
   function onFilesSelected(event) {
